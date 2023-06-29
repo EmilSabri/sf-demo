@@ -65,6 +65,10 @@ export default class CreateIssue extends LightningElement {
         })
     }
 
+    // Todo - 
+    // 1. Upon completion create popup toast to confirm success
+    // 2. Input validation - require title 
+    // 3. Upon success - reset the component values back to default
     handleSubmit(event) {
         event.preventDefault();
         createIssue({

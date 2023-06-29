@@ -1,5 +1,6 @@
 public with sharing class Issue {
     public Issue() {
+        //
     }
 
     /*
@@ -10,10 +11,9 @@ public with sharing class Issue {
     */
 
     @AuraEnabled
-    public static void createIssue(String title, String body, String[] labels){
+    public static void createIssue(String title, String body, String[] labels) {
         try {
             Http http = new Http();
-
             HttpRequest req = new HttpRequest();
             req.setClientCertificateName('github');
             req.setEndpoint('callout:Github_Credential/issues');
@@ -29,5 +29,17 @@ public with sharing class Issue {
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
+    }
+
+    @AuraEnabled
+    public static string getIssues() {
+        Http http = new Http();
+        HttpRequest req = new HttpRequest();
+        req.setClientCertificateName('github');
+        req.setEndpoint('callout:Github_Credential/issues');
+        req.setMethod('GET');
+
+        HttpResponse res = http.send(req);
+        return res.getBody();
     }
 }
