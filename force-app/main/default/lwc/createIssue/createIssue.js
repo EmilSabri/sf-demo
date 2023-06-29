@@ -1,6 +1,7 @@
 import {
     LightningElement
 } from 'lwc';
+import createIssue from '@salesforce/apex/Issue.createIssue';
 
 export default class CreateIssue extends LightningElement {
     title = '';
@@ -66,6 +67,10 @@ export default class CreateIssue extends LightningElement {
 
     handleSubmit(event) {
         event.preventDefault();
-        console.log(this.title, this.body, this.label.join(', '), this.priority);
+        createIssue({
+            title: this.title,
+            body: this.body,
+            labels: [...this.label, this.priority]
+        });
     }
 }
