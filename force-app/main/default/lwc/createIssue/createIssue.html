@@ -1,0 +1,23 @@
+<template>
+    <lightning-card title="Create Issue">
+
+        <lightning-input type="text" label="Enter Title" onchange={handleTitleChange}></lightning-input>
+        <lightning-input type="text" label="Enter Description" onchange={handleBodyChange}></lightning-input>
+        <div>
+            <h2>Issue Labels</h2>
+            <lightning-checkbox-group name="issueLabels" label="Issue Labels" options={labelOptions} value={label}
+                onchange={handleLabelChange} required>
+            </lightning-checkbox-group>
+        </div>
+        <div>
+            <lightning-button-group>
+                <template for:each={priorityOptions} for:item="prio">
+                    <lightning-button variant={prio.variant} label={prio.value} key={prio.value}
+                        onclick={handlePriorityClick}>
+                    </lightning-button>
+                </template>
+            </lightning-button-group>
+        </div>
+        <lightning-button label="Create Issue" onclick={handleSubmit}></lightning-button>
+    </lightning-card>
+</template>
