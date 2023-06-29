@@ -1,6 +1,9 @@
 import {
     LightningElement
 } from 'lwc';
+import {
+    ShowToastEvent
+} from 'lightning/platformShowToastEvent';
 import createIssue from '@salesforce/apex/Issue.createIssue';
 
 export default class CreateIssue extends LightningElement {
@@ -9,7 +12,7 @@ export default class CreateIssue extends LightningElement {
     label = ['Bug'];
     priority = '';
 
-    // Todo - if more time. Grab labels from github api and save into SF DB
+    // Future - Grab labels from github api and save into SF DB
     labelOptions = [{
             label: 'Bug',
             value: 'Bug'
@@ -56,6 +59,36 @@ export default class CreateIssue extends LightningElement {
 
     handlePriorityClick(event) {
         this.priority = event.target.label;
+        this.updatePrioList();
+    }
+
+    handleSubmit(event) {
+        event.preventDefault();
+        if (this.title === '') return
+
+        createIssue({
+            title: this.title,
+            body: this.body,
+            labels: [...this.label, this.priority]
+        });
+
+        this.resetInputs();
+        const toastEvent = new ShowToastEvent({
+            title: 'Success!',
+            message: 'Issue Created Successfully',
+        })
+        this.dispatchEvent(toastEvent);
+    }
+
+    resetInputs() {
+        this.title = '';
+        this.body = '';
+        this.label = ['Bug'];
+        this.priority = '';
+        this.updatePrioList();
+    }
+
+    updatePrioList() {
         this.priorityOptions = this.priorityOptions.map(prio => {
             let variantStyle = prio.value === this.priority ? 'brand' : 'brand-outline';
             return {
@@ -63,18 +96,5 @@ export default class CreateIssue extends LightningElement {
                 variant: variantStyle
             }
         })
-    }
-
-    // Todo - 
-    // 1. Upon completion create popup toast to confirm success
-    // 2. Input validation - require title 
-    // 3. Upon success - reset the component values back to default
-    handleSubmit(event) {
-        event.preventDefault();
-        createIssue({
-            title: this.title,
-            body: this.body,
-            labels: [...this.label, this.priority]
-        });
     }
 }
